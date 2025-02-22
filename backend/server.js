@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(cors({
-     origin: "*",
+     origin: "https://final-year-project-five-snowy.vercel.app/",
      credentials: true
 }));
 
