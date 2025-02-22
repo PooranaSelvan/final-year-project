@@ -1,0 +1,8 @@
+PORT = 5000
+MONGO_URI = mongodb+srv://ce23503846:12252021@e-com.xqwno.mongodb.net/?retryWrites=true&w=majority&appName=e-com
+CLOUDINARY_CLOUD_NAME=dssvk1cxy
+CLOUDINARY_API_KEY=176112419287882
+CLOUDINARY_API_SECRET=9g9sMWY9a5-aNAFqlZGjnzvTHBU
+RAZOR_KEY_ID = rzp_test_rF6DxHOyJXOEpp
+RAZOR_KEY_SECRET = LV8DTRRmfSVcBrDMVyE2bhQW    
+NODE_ENV = production
