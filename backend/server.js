@@ -21,15 +21,29 @@ const app = express();
 // env file configuration
 dotenv.config();
 
+const allowedOrigins = [
+     "https://final-year-project-five-snowy.vercel.app", 
+     "https://shoploot.xyz"
+];
+const corsOptions = {
+     origin: (origin, callback) => {
+       // Allow the request if the origin is in the allowedOrigins array
+       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+         callback(null, true);  // Allow the origin
+       } else {
+         callback(new Error("Not allowed by CORS"));  // Reject the origin
+       }
+     },
+     credentials: true,  // Allow credentials (cookies, authorization headers, etc.)
+};
+
+
 
 // url data encoded
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
-app.use(cors({
-     origin: "https://final-year-project-five-snowy.vercel.app", // need to change while testing..
-     credentials: true
-}));
+app.use(cors(corsOptions));
 
 
 // Razor Pay
