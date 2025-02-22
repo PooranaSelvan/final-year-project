@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://e-com-backend-vev8.onrender.com/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL || "https://final-year-project-312a.onrender.com/api",
   withCredentials: true,
 });
 
