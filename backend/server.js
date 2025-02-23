@@ -50,8 +50,8 @@ app.use(cors(corsOptions));
 
 // Razor Pay
 export const razorpay = new Razorpay({
-     key_id: "rzp_test_rF6DxHOyJXOEpp",  // Replace with your Razorpay Test Key ID
-     key_secret: "LV8DTRRmfSVcBrDMVyE2bhQW",  // Replace with your Razorpay Test Key Secret
+     key_id: process.env.RAZOR_KEY_ID,  // Replace with your Razorpay Test Key ID
+     key_secret: process.env.RAZOR_KEY_SECRET,  // Replace with your Razorpay Test Key Secret
    
 });
 
