@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { ArrowLeft } from 'lucide-react';
 import axiosInstance from "../axiosInstance.js";
+import Loader from "../components/Loader.jsx";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -91,7 +92,13 @@ const CartPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <p className="fs-4">
+          <Loader />
+        </p>
+      </div>
+    );
   }
 
   if (cartItems.length === 0) {

@@ -1,34 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import Product from '../components/Product';
 import axiosInstance from '../axiosInstance.js';
+import Loader from "../components/Loader.jsx";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); // Ensure loading is initially true
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true); // Start loading
       try {
         const { data } = await axiosInstance.get('/products/');
-        // console.log('API Response:', data);
-  
+
         if (Array.isArray(data)) {
           setProducts(data);
         } else if (Array.isArray(data.products)) {
           setProducts(data.products);
         } else {
           console.error('Unexpected API response format:', data);
-          setProducts([]); // Handle unknown response
+          setProducts([]);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
-        setProducts([]);
+        setProducts([]); // Ensure no crash
       }
+      setLoading(false); // Stop loading only after fetch completes
     };
-  
+
     fetchProducts();
   }, []);
-  
-  
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <p className="fs-4">
+          <Loader />
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-light">
@@ -42,7 +53,6 @@ const HomePage = () => {
           {products.length > 0 ? (
             products.map((product) => (
               <div className="col" key={product._id}>
-                {/* {console.log(product)} */}
                 <Product products={product} />
               </div>
             ))

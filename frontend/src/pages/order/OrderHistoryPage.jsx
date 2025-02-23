@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import axiosInstance from '../../axiosInstance.js';
+import Loader from '../../components/Loader.jsx';
 
 const OrderHistoryPage = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -36,7 +37,13 @@ const OrderHistoryPage = () => {
     fetchOrders();
   }, [userInfo?._id]);
 
-  if (loading) return <div className="text-center my-5">Loading...</div>;
+  if (loading) return (
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <p className="fs-4">
+        <Loader />
+      </p>
+    </div>
+  );
 
   return (
     <div className="container my-5">
