@@ -17,7 +17,7 @@ const Product = ({ products }) => {
             alt={products.name} 
             className="card-img-top"
             style={{ aspectRatio: '16/9', objectFit: 'cover' }}
-            loading="lazy"
+            fetchpriority="high"
           />
         </div>
         <div className="card-body d-flex flex-column">
