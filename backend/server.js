@@ -23,12 +23,14 @@ dotenv.config();
 
 const allowedOrigins = [
      "https://final-year-project-five-snowy.vercel.app", 
-     "https://shoploot.xyz"
+     "https://shoploot.xyz",
+     "http://localhost:5173" // Added localhost for development
 ];
+
 const corsOptions = {
      origin: (origin, callback) => {
        // Allow the request if the origin is in the allowedOrigins array
-       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+       if (allowedOrigins.includes(origin) || !origin) {
          callback(null, true);  // Allow the origin
        } else {
          callback(new Error("Not allowed by CORS"));  // Reject the origin
@@ -48,8 +50,8 @@ app.use(cors(corsOptions));
 
 // Razor Pay
 export const razorpay = new Razorpay({
-     key_id: process.env.RAZOR_KEY_ID,  // Replace with your Razorpay Test Key ID
-     key_secret: process.env.RAZOR_KEY_SECRET,  // Replace with your Razorpay Test Key Secret
+     key_id: "rzp_test_rF6DxHOyJXOEpp",  // Replace with your Razorpay Test Key ID
+     key_secret: "LV8DTRRmfSVcBrDMVyE2bhQW",  // Replace with your Razorpay Test Key Secret
    
 });
 
