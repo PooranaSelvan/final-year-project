@@ -3,45 +3,51 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-toastify';
 import axiosInstance from '../axiosInstance.js';
-
+import Loader from '../components/Loader.jsx';
 
 const ProductPage = () => {
-
   const { id } = useParams();
-  const [products, setProducts] = useState([]);
-
+  const [products, setProducts] = useState({});
   const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true); // Set loading to true before fetching data
         const { data } = await axiosInstance.get(`/products/${id}`);
         setProducts(data);
       } catch (error) {
         console.error('Error fetching product:', error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
     fetchProduct();
   }, [id]);
 
-
   const addToCartHandler = async (e) => {
     e.preventDefault();
-    // console.log(id);
-    // console.log(localStorage.getItem("userInfo"))
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const userID = userInfo._id
+    const userID = userInfo._id;
     console.log(qty);
-
 
     try {
       const { data } = await axiosInstance.post("/cart/", { productId: id, userId: userID, qty }, { withCredentials: true });
-      // console.log(data);
-      toast.success("Successfully Added to Cart!")
-    } catch(err) {
+      toast.success("Successfully Added to Cart!");
+    } catch (err) {
       console.log(err);
     }
+  };
+
+  // Show loader if still fetching data
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -117,7 +123,7 @@ const ProductPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductPage
+export default ProductPage;
