@@ -34,9 +34,7 @@ const HomePage = () => {
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="fs-4">
-          <Loader />
-        </div>
+        <Loader />
       </div>
     );
   }
