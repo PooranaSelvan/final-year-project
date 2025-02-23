@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "lucide-react";
 import axiosInstance from "../axiosInstance.js";
+import Loader from "../components/Loader.jsx";
 
 const SellingPage = () => {
-  const user = JSON.parse(localStorage.getItem("userInfo"));
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
+  const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [brand, setBrand] = useState("");
@@ -17,12 +21,16 @@ const SellingPage = () => {
   const [price, setPrice] = useState("");
   const [countInStock, setCountInStock] = useState("");
   const [image, setImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
 
-  if (!user?.isSeller) {
-    navigate("/");
-    return null;
-  }
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("userInfo"));
+    if (!storedUser || !storedUser.isSeller) {
+      navigate("/");
+    } else {
+      setUser(storedUser);
+    }
+    setLoading(false);
+  }, [navigate]);
 
   // Handle Image Upload to Cloudinary
   const handleImageUpload = async (e) => {
@@ -30,10 +38,9 @@ const SellingPage = () => {
     if (!file) return;
 
     setUploading(true);
-
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "e-com images"); // Replace with your Cloudinary upload preset
+    formData.append("upload_preset", "e-com images"); // Replace with your Cloudinary preset
 
     try {
       const res = await axios.post(
@@ -53,12 +60,12 @@ const SellingPage = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!image) {
       toast.error("Please upload an image first.");
       return;
     }
 
+    setSubmitting(true);
     try {
       await axiosInstance.post(
         "/products",
@@ -69,9 +76,9 @@ const SellingPage = () => {
           category,
           price,
           countInStock,
-          image, // Send image URL from Cloudinary
+          image,
           isSeller: user.isSeller,
-          userId: user._id
+          userId: user._id,
         },
         { withCredentials: true }
       );
@@ -80,8 +87,20 @@ const SellingPage = () => {
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add product");
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <p className="fs-4">
+          <Loader />
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
@@ -95,35 +114,78 @@ const SellingPage = () => {
       <form onSubmit={handleSubmit} className="shadow p-4 rounded">
         <div className="mb-3">
           <label className="form-label">Product Name</label>
-          <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
+          <input
+            type="text"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Description</label>
-          <textarea className="form-control" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+          <textarea
+            className="form-control"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          ></textarea>
         </div>
         <div className="mb-3">
           <label className="form-label">Brand</label>
-          <input type="text" className="form-control" value={brand} onChange={(e) => setBrand(e.target.value)} required />
+          <input
+            type="text"
+            className="form-control"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            required
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Category</label>
-          <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} required />
+          <input
+            type="text"
+            className="form-control"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Price</label>
-          <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} required />
+          <input
+            type="number"
+            className="form-control"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Count In Stock</label>
-          <input type="number" className="form-control" value={countInStock} onChange={(e) => setCountInStock(e.target.value)} required />
+          <input
+            type="number"
+            className="form-control"
+            value={countInStock}
+            onChange={(e) => setCountInStock(e.target.value)}
+            required
+          />
         </div>
         <div className="mb-3">
           <label className="form-label">Product Image</label>
-          <input type="file" className="form-control" accept="image/*" onChange={handleImageUpload} required />
+          <input
+            type="file"
+            className="form-control"
+            accept="image/*"
+            onChange={handleImageUpload}
+            required
+          />
           {uploading && <p>Uploading...</p>}
-          {image && <img src={image} alt="Product Preview" width="100" />}
+          {image && <img src={image} alt="Product Preview" width="100" loading="lazy" />}
         </div>
-        <button type="submit" className="btn btn-primary w-100">Upload Product</button>
+        <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
+          {submitting ? "Uploading..." : "Upload Product"}
+        </button>
       </form>
     </div>
   );

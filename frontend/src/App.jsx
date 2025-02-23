@@ -1,21 +1,17 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { ToastContainer } from 'react-toastify';
-
+import { ToastContainer } from "react-toastify";
 
 function App() {
-  
-
   return (
     <>
       <div>
         <Navbar />
         <Outlet />
-        {/* <img src="/iphone.jpg" alt="" /> */}
         <ToastContainer />
-      </div>  
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

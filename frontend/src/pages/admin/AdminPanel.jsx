@@ -166,7 +166,7 @@ const AdminPanel = () => {
             {products.map((product) => (
               <div key={product._id} className="col-md-4">
                 <div className="card shadow-lg p-3 mb-4">
-                  <img src={product.image} className="card-img-top" alt={product.name} />
+                  <img src={product.image} className="card-img-top" alt={product.name} loading="lazy" />
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="text-muted">{product.brand}</p>

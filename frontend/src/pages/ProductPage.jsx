@@ -54,7 +54,7 @@ const ProductPage = () => {
       <div className="row g-4">
         <div className="col-md-6">
           <div className="bg-light p-4 rounded">
-            <img className="img-fluid rounded" src={products.image || "/placeholder.svg"} alt={products.name}/>
+            <img className="img-fluid rounded" src={products.image || "/placeholder.svg"} alt={products.name} loading="lazy"/>
           </div>
         </div>
         <div className="col-md-6">
@@ -71,7 +71,7 @@ const ProductPage = () => {
                 <div className="col-6">
                   <div className="bg-light p-3 rounded">
                     <small className="text-muted">Price</small>
-                    <div className="h4 mb-0 text-primary">${products.price}</div>
+                    <div className="h4 mb-0 text-primary">₹{products.price}</div>
                   </div>
                 </div>
                 <div className="col-6">

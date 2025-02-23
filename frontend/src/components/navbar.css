@@ -1,0 +1,24 @@
+/* Optimize Navbar for Mobile */
+@media (max-width: 768px) {
+     .shadow-sm {
+       box-shadow: none !important;
+     }
+   
+     .navbar-collapse {
+       transition: max-height 0.3s ease-in-out;
+       overflow: hidden;
+     }
+   }
+   
+   /* Dropdown Animation */
+   .dropdown-menu {
+     opacity: 0;
+     display: none;
+     transition: opacity 0.3s ease-in-out;
+   }
+   
+   .dropdown-menu.show {
+     opacity: 1;
+     display: block;
+   }
+   

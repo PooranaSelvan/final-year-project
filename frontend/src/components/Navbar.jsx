@@ -3,17 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "react-toastify";
 import axiosInstance from "../axiosInstance.js";
+import "./navbar.css";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(axiosInstance);
-    // Fetch user data
     axiosInstance
       .get("/users/auth", { withCredentials: true })
       .then((response) => {
@@ -21,20 +21,7 @@ const Navbar = () => {
         setIsSeller(response.data.user?.isSeller || false);
         setIsAdmin(response.data.user?.isAdmin || false);
       })
-      .catch((error) => {
-        console.error("Error checking auth status:", error);
-        setIsLoggedIn(false);
-      });
-
-    // Get cart count
-    axiosInstance
-      .get("/cart", { withCredentials: true })
-      .then((response) => {
-        setCartCount(response.data.cartItems.length || 0);
-      })
-      .catch((error) => {
-        console.error("Error fetching cart items:", error);
-      });
+      .catch(() => setIsLoggedIn(false));
   }, []);
 
   const handleLogout = () => {
@@ -46,64 +33,58 @@ const Navbar = () => {
         localStorage.removeItem("userInfo");
         navigate("/");
       })
-      .catch((error) => console.error("Logout failed:", error));
+      .catch(() => {});
 
     toast.success("Logged Out Successfully!");
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm mt-2">
-      <div className="container">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div className="container d-flex justify-content-between align-items-center">
         {/* Logo */}
         <Link className="navbar-brand" to="/">
-          <img src="/images/bootstrap.png" alt="Bootstrap Logo" width="65" height="54" />
+          <img src="/images/bootstrap.png" alt="Logo" width="65" height="54" loading="lazy" />
         </Link>
 
-        {/* Hamburger Button for Mobile */}
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        {/* Toggle Button for Mobile */}
+        <button className="navbar-toggler" onClick={() => setNavbarOpen(!navbarOpen)}>
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navbar Content */}
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="list-unstyled d-flex flex-wrap align-items-center gap-2">
+        {/* Navbar Items */}
+        <div className={`collapse navbar-collapse ${navbarOpen ? "show" : ""}`}>
+          <ul className="navbar-nav ms-auto d-flex align-items-center gap-3">
             {isLoggedIn ? (
               <>
                 {isSeller && (
                   <li className="nav-item">
-                    <Link to="/sell" className="btn btn-primary text-white rounded-pill px-4 py-2 shadow-sm me-2">
+                    <Link to="/sell" className="btn btn-outline-primary rounded-pill px-3 py-1">
                       Sell
                     </Link>
                   </li>
                 )}
 
-                {/* Admin Panel Button */}
                 {isAdmin && (
                   <li className="nav-item">
-                    <Link to="/admin" className="btn btn-warning text-dark rounded-pill px-4 py-2 shadow-sm me-2">
-                      Admin Panel
+                    <Link to="/admin" className="btn btn-outline-warning rounded-pill px-3 py-1">
+                      Admin
                     </Link>
                   </li>
                 )}
 
-                {/* Cart Icon with Badge */}
-                <li className="nav-item position-relative me-3">
-                  <Link to="/cart" className="btn btn-primary text-white rounded-pill px-4 py-2 shadow-sm">
-                    <ShoppingCart />
-                    {cartCount > 0 && (
-                      <span className="badge position-absolute top-0 start-100 translate-middle bg-danger">
-                        {cartCount}
-                      </span>
-                    )}
+                {/* Cart Icon */}
+                <li className="nav-item position-relative">
+                  <Link to="/cart" className="btn btn-outline-primary rounded-circle p-2">
+                    <ShoppingCart size={20} />
                   </Link>
                 </li>
 
-                {/* Dropdown Menu */}
+                {/* User Dropdown */}
                 <li className="nav-item dropdown">
-                  <button className="btn btn-secondary dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button className="btn btn-outline-secondary dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     Menu
                   </button>
-                  <ul className="dropdown-menu">
+                  <ul className={`dropdown-menu ${dropdownOpen ? "show" : ""}`}>
                     <li>
                       <Link className="dropdown-item" to="/order-history">
                         Orders
@@ -124,7 +105,7 @@ const Navbar = () => {
               </>
             ) : (
               <li className="nav-item">
-                <Link to="/login" className="btn btn-primary text-white px-4 py-2 rounded-pill fw-semibold">
+                <Link to="/login" className="btn btn-primary rounded-pill px-3 py-1">
                   Login
                 </Link>
               </li>

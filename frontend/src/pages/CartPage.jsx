@@ -134,6 +134,7 @@ const CartPage = () => {
                     src={item.image}
                     alt={item.name}
                     className="img-fluid rounded-start"
+                    loading="lazy"
                   />
                 </div>
                 {/* Product Details */}
@@ -141,7 +142,7 @@ const CartPage = () => {
                   <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
                     <p className="card-text">
-                      Price: <strong>${item.price}</strong>
+                      Price: <strong>₹{item.price}</strong>
                     </p>
                     <div className="mb-3">
                       {item.countInStock > 0 && (
