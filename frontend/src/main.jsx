@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import App from './App.jsx';
-import AboutPage from './pages/AboutPage.jsx';
 
 // Lazy load the pages to optimize performance
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
