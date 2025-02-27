@@ -43,7 +43,7 @@ const Navbar = () => {
       <div className="container d-flex justify-content-between align-items-center">
         {/* Logo */}
         <Link className="navbar-brand" to="/">
-          <img src="/images/bootstrap.png" alt="Logo" width="65" height="54" loading="lazy" />
+          <img src="/images/shoploot.png" alt="Logo" width="65" height="54" loading="lazy" />
         </Link>
 
         {/* Toggle Button for Mobile */}
