@@ -86,6 +86,11 @@ const Navbar = () => {
                   </button>
                   <ul className={`dropdown-menu ${dropdownOpen ? "show" : ""}`}>
                     <li>
+                      <Link className="dropdown-item" to="/about">
+                        About
+                      </Link>
+                    </li>
+                    <li>
                       <Link className="dropdown-item" to="/order-history">
                         Orders
                       </Link>

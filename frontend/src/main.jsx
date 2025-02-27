@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import App from './App.jsx';
+import AboutPage from './pages/AboutPage.jsx';
 
 // Lazy load the pages to optimize performance
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
@@ -19,6 +20,7 @@ const SellingPage = lazy(() => import('./pages/SellingPage.jsx'));
 const ShippingPage = lazy(() => import('./pages/shipping/ShippingPage.jsx'));
 const PaymentPage = lazy(() => import('./pages/payment/PaymentPage.jsx'));
 const OrderHistoryPage = lazy(() => import('./pages/order/OrderHistoryPage.jsx'));
+const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 
 // Define routes with lazy loading
 const router = createBrowserRouter(
@@ -35,6 +37,7 @@ const router = createBrowserRouter(
       <Route path="/shipping" element={<Suspense fallback={<p>Loading...</p>}><ShippingPage /></Suspense>} />
       <Route path="/payment" element={<Suspense fallback={<p>Loading...</p>}><PaymentPage /></Suspense>} />
       <Route path="/order-history" element={<Suspense fallback={<p>Loading...</p>}><OrderHistoryPage /></Suspense>} />
+      <Route path="/about" element={<Suspense fallback={<p>Loading...</p>}><AboutPage /></Suspense>} />
     </Route>
   )
 );
