@@ -1,0 +1,41 @@
+.hover-shadow:hover {
+     box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+     transform: scale(1.05);
+     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+   }
+   
+   .card {
+     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
+  /* Hover Effect for Cart Button */
+  .hover-scale:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
+
+  /* Customize Select Dropdown */
+  .form-select {
+    border-radius: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  }
+
+  /* Additional Navbar Styling */
+  .navbar {
+    background-color: #f8f9fa !important;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .navbar-brand img {
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+  }
+
+  .navbar-light .navbar-nav .nav-link {
+    color: #5a5a5a;
+  }
