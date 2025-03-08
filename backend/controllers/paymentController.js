@@ -43,6 +43,7 @@ export const createOrder = async (req, res) => {
       amount: response.amount,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
