@@ -26,7 +26,7 @@ const PaymentPage = () => {
 
   const initializeSDK = async () => {
     try {
-      const cashfreeSdk = await load({ mode: "sandbox" });
+      const cashfreeSdk = await load({ mode: import.meta.env.NODE_ENV === "production" ? "production" :"sandbox" });
       // console.log("Cashfree SDK loaded:", cashfreeSdk);
       setCashfree(cashfreeSdk); // Set the loaded SDK in state
       setIsSdkLoaded(true); // Mark SDK as loaded
