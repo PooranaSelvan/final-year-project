@@ -25,7 +25,8 @@ dotenv.config();
 const allowedOrigins = [
      "https://final-year-project-five-snowy.vercel.app", 
      "https://shoploot.xyz",
-     "http://localhost:5173" // Added localhost for development
+     "http://localhost:5173",
+     "*" 
 ];
 
 const corsOptions = {
