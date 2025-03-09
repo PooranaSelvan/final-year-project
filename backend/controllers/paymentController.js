@@ -31,7 +31,7 @@ export const createCashfreeOrder = async (req, res) => {
   try {
     const options = {
         method: 'POST',
-        url: 'https://sandbox.cashfree.com/pg/orders',
+        url: process.env.NODE_ENV === "production" ? "https://api.cashfree.com/pg/orders" : 'https://sandbox.cashfree.com/pg/orders',
         headers: {
             accept: 'application/json',
             'x-api-version': '2022-09-01',
@@ -88,7 +88,7 @@ export const checkStatus = async (req, res) => {
   try {
     const options = {
       method: 'GET',
-      url: `https://sandbox.cashfree.com/pg/orders/${orderId}`,
+      url: process.env.NODE_ENV === "production" ? `https://api.cashfree.com/pg/orders${orderId}` :`https://sandbox.cashfree.com/pg/orders/${orderId}`,
       headers: {
         accept: 'application/json',
         'x-api-version': '2022-09-01',
