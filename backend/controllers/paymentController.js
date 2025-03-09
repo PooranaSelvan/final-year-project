@@ -88,7 +88,7 @@ export const checkStatus = async (req, res) => {
   try {
     const options = {
       method: 'GET',
-      url: process.env.NODE_ENV === "production" ? `https://api.cashfree.com/pg/orders${orderId}` :`https://sandbox.cashfree.com/pg/orders/${orderId}`,
+      url: process.env.NODE_ENV === "production" ? `https://api.cashfree.com/pg/orders/${orderId}` :`https://sandbox.cashfree.com/pg/orders/${orderId}`,
       headers: {
         accept: 'application/json',
         'x-api-version': '2022-09-01',
