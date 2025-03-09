@@ -7,6 +7,7 @@ const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mobile, setMobile] = useState(''); // New state for mobile number
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ const RegisterPage = () => {
     e.preventDefault();
     setError(null);
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !mobile) {
       setError('All fields are required');
       return;
     }
@@ -24,6 +25,7 @@ const RegisterPage = () => {
         name,
         email,
         password,
+        mobile, // Include mobile number in the request
       });
       
       if (response.status === 201) {
@@ -44,19 +46,53 @@ const RegisterPage = () => {
         {/* Name */}
         <div className="mb-3">
           <label htmlFor="name" className="form-label fw-semibold">Name</label>
-          <input type="text" id="name" className="form-control shadow-sm" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+          <input 
+            type="text" 
+            id="name" 
+            className="form-control shadow-sm" 
+            placeholder="Enter your name" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+          />
         </div>
 
         {/* Email */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label fw-semibold">Email</label>
-          <input type="email" id="email" className="form-control shadow-sm" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input 
+            type="email" 
+            id="email" 
+            className="form-control shadow-sm" 
+            placeholder="Enter your email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+          />
         </div>
 
         {/* Password */}
         <div className="mb-3">
           <label htmlFor="password" className="form-label fw-semibold">Password</label>
-          <input type="password" id="password" className="form-control shadow-sm" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input 
+            type="password" 
+            id="password" 
+            className="form-control shadow-sm" 
+            placeholder="Enter your password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+        </div>
+
+        {/* Mobile Number */}
+        <div className="mb-3">
+          <label htmlFor="mobile" className="form-label fw-semibold">Mobile Number</label>
+          <input 
+            type="tel" 
+            id="mobile" 
+            className="form-control shadow-sm" 
+            placeholder="Enter your mobile number" 
+            value={mobile} 
+            onChange={(e) => setMobile(e.target.value)} 
+          />
         </div>
 
         {/* Error message */}

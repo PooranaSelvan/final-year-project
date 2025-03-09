@@ -11,7 +11,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import shippingRoutes from "./routes/shippingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-import Razorpay from 'razorpay';
+import { load } from '@cashfreepayments/cashfree-js';
+import { Cashfree } from "cashfree-pg";
 
 
 // express declaration
@@ -48,13 +49,11 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 
-// Razor Pay
-export const razorpay = new Razorpay({
-     key_id: process.env.RAZOR_KEY_ID,  // Replace with your Razorpay Test Key ID
-     key_secret: process.env.RAZOR_KEY_SECRET,  // Replace with your Razorpay Test Key Secret
-   
-});
-
+export const config = {
+     cashfreeAppId: process.env.CASHFREE_APP_ID,
+     cashfreeApiKey: process.env.CASHFREE_API_KEY,
+     nodeEnv: process.env.NODE_ENV
+};
 
 // Configure Cloudinary
 cloudinary.config({ 

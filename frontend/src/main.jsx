@@ -21,6 +21,8 @@ const ShippingPage = lazy(() => import('./pages/shipping/ShippingPage.jsx'));
 const PaymentPage = lazy(() => import('./pages/payment/PaymentPage.jsx'));
 const OrderHistoryPage = lazy(() => import('./pages/order/OrderHistoryPage.jsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
+const Success = lazy(() => import('./components/Success.jsx'));
+const Failure = lazy(() => import('./components/Failure.jsx'));
 
 
 
@@ -40,6 +42,8 @@ const router = createBrowserRouter(
       <Route path="/payment" element={<Suspense fallback={<p>Loading...</p>}><PaymentPage /></Suspense>} />
       <Route path="/order-history" element={<Suspense fallback={<p>Loading...</p>}><OrderHistoryPage /></Suspense>} />
       <Route path="/about" element={<Suspense fallback={<p>Loading...</p>}><AboutPage /></Suspense>} />
+      <Route path="/success" element={<Suspense fallback={<p>Loading...</p>}><Success /></Suspense>} />
+      <Route path="/failure" element={<Suspense fallback={<p>Loading...</p>}><Failure /></Suspense>} />
     </Route>
   )
 );

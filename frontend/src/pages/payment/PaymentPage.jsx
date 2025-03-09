@@ -4,11 +4,10 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance.js';
+import { load } from "@cashfreepayments/cashfree-js";
 
 const PaymentPage = () => {
-
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-//   console.log(userInfo);
   const [quantities, setQuantities] = useState({});
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +15,29 @@ const PaymentPage = () => {
   const [amount, setAmount] = useState(0);
   const [currency, setCurrency] = useState('INR');
   const [userId, setUserId] = useState(userInfo._id);
+  const [isOrderCreated, setIsOrderCreated] = useState(false);
+  const [sessionId, setSessionId] = useState(''); 
   const navigate = useNavigate();
+
+
+  // Initialize Cashfree SDK
+  const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+  const [cashfree, setCashfree] = useState(null); // Track Cashfree SDK state
+
+  const initializeSDK = async () => {
+    try {
+      const cashfreeSdk = await load({ mode: "sandbox" });
+      // console.log("Cashfree SDK loaded:", cashfreeSdk);
+      setCashfree(cashfreeSdk); // Set the loaded SDK in state
+      setIsSdkLoaded(true); // Mark SDK as loaded
+    } catch (error) {
+      console.error("Error loading Cashfree SDK:", error);
+    }
+  };
+
+  useEffect(() => {
+    initializeSDK();
+  }, []);
 
   useEffect(() => {
     // Fetch cart items and then create order after cartItems are loaded
@@ -28,12 +49,13 @@ const PaymentPage = () => {
 
       try {
         const { data } = await axiosInstance.get(
-          `/cart?userId=${userInfo?._id}`,
+          `/cart?userId=${userInfo._id}`,
           {
             withCredentials: true,
           }
         );
         setCartItems(data.cartItems);
+        // console.log(data.cartItems);
         setLoading(false);
       } catch (error) {
         console.error("Failed to Load Cart Items:", error);
@@ -45,31 +67,39 @@ const PaymentPage = () => {
     fetchCartItems();
   }, []);
 
-  // Create order only after cartItems are loaded
   useEffect(() => {
-    if (cartItems.length === 0) return; // Wait for cartItems to load
+    if (cartItems.length === 0 || isOrderCreated) return;
+  
     const totalAmount = cartItems.reduce((acc, item) => 
       acc + (quantities[item._id] || item.qty) * item.price, 0
     ).toFixed(0);
   
     const createOrder = async () => {
       try {
-        // Modify the cartItems to match the backend schema
+        const { data: userDetails } = await axiosInstance.get('/users/profile', {
+          withCredentials: true
+        });
+  
         const modifiedProducts = cartItems.map(item => ({
-          productId: item.product, // assuming productId should be 'product' field
-          quantity: quantities[item._id] || item.qty, // if quantities is available, use it, otherwise use item.qty
-          price: item.price, // Include price if needed
-          name: item.name,   // Include name if needed
+          productId: item.product,
+          quantity: quantities[item._id] || item.qty,
+          price: item.price,
+          name: item.name,
         }));
   
         const requestBody = {
           total: Number(totalAmount),
           currency: 'INR',
           userId,
-          products: modifiedProducts, // Send the modified products array
+          products: modifiedProducts,
+          customerDetails: {
+            name: userDetails.name,
+            email: userDetails.email,
+            mobile: userDetails.mobile,
+            address: userDetails.address,
+          },
+          orderAmount: totalAmount,
         };
-  
-        // console.log("Sending Order Request:", requestBody); // Debugging
   
         const { data } = await axiosInstance.post(
           '/payment/create-order',
@@ -78,74 +108,123 @@ const PaymentPage = () => {
         );
   
         // console.log(data);
-  
-        setOrderId(data.orderId);
-        setAmount(data.amount);
+        setOrderId(data.orderId); // Make sure orderId is set
+        setAmount(data.amount);   // Make sure amount is set
         setCurrency(data.currency);
+        setSessionId(data.paymentSessionId);
+  
       } catch (error) {
         console.error("Error creating order:", error.response?.data || error.message);
+        toast.error("Failed to create order");
       }
     };
   
     createOrder();
-  }, [cartItems, userId]);
+  }, [cartItems, quantities, userId, isOrderCreated]);
+    
 
-  const handlePayment = () => {
-    if (!orderId) return;
-
-    const options = {
-      key: 'rzp_test_rF6DxHOyJXOEpp',
-      amount: amount,
-      currency: currency,
-      name: 'Shop Loot',
-      description: 'Test Transaction',
-      image: 'https://example.com/your-logo.png',
-      order_id: orderId,
-      handler: function (response) {
-        alert('Payment Successful! Payment ID: ' + response.razorpay_payment_id);
-        toast.success("Payment Successful !");
-        navigate("/order-history");
-      },
-      prefill: {
-        name: userInfo.name,
-        email: userInfo.email,
-      },
-      notes: {
-        address: 'Address for shipping',
-      },
-      theme: {
-        color: '#F37254',
-      },
+  const doPayment = async () => {
+    if (!isSdkLoaded) {
+      toast.error("Cashfree SDK is not initialized yet.");
+      return;
+    }
+  
+    if (!sessionId) {
+      toast.error("Session ID is not available.");
+      return;
+    }
+  
+    if (!cashfree) {
+      toast.error("Cashfree object is not initialized.");
+      return;
+    }
+  
+    const checkoutOptions = {
+      paymentSessionId: sessionId,
+      redirectTarget: "_modal",
     };
-
-    const razorpay = new window.Razorpay(options);
-    razorpay.open();
-  };
+  
+    try {
+      const result = await cashfree.checkout(checkoutOptions);
+      if (result.error) {
+        console.log("User has closed the popup or there is some payment error.");
+        console.log(result.error);
+        return;
+      }
+  
+      if (result.paymentDetails) {
+        console.log("Payment has been completed, Check for Payment Status");
+        console.log(result.paymentDetails);
+  
+        // Send payment details (orderId or paymentDetails) to your backend to check payment status
+        const paymentResponse = await axiosInstance.post('/payment/check-status', {
+          orderId: orderId,
+          // amount: amount,
+          // currency: currency,
+          // userId: userId,
+          // products: cartItems,
+        });
+  
+        // Handle response
+        if (paymentResponse.status === 200) {
+          const { data } = paymentResponse;
+          if (data.status === 'success') {
+            try{
+              await axiosInstance.post("/orders/", {
+                amount: amount,
+                currency: currency,
+                userId: userId,
+                products: cartItems,
+                orderId: orderId
+              });
+              toast.success("Your Order History Has Been Saved..");
+            } catch(err){
+              console.log(err);
+            }
+            navigate('/success');
+          } else {
+            // Handle failure or active payment status
+            navigate(`/failure`);
+          }
+        } else {
+          toast.error("Failed to check payment status.");
+        }
+      }
+    } catch (error) {
+      console.error("Error during payment processing:", error);
+      toast.error("An error occurred while processing the payment.");
+    }
+  };  
+  
 
   return (
     <div className="container my-5">
       <div className="d-flex flex-wrap justify-content-between">
-          <h1 className="text-center text-primary mb-4">Complete Your Payment</h1>
-          <Link to="/shipping" className="btn btn-link text-decoration-none mb-4">
-            <ArrowLeft className="me-2" />
-            <span>Go back</span>
-          </Link>
+        <h1 className="text-center text-primary mb-4">Complete Your Payment</h1>
+        <Link to="/shipping" className="btn btn-link text-decoration-none mb-4">
+          <ArrowLeft className="me-2" />
+          <span>Go back</span>
+        </Link>
       </div>
 
       <div className="card shadow-lg p-4">
         <div className="card-body">
           <h5 className="card-title">Order Summary</h5>
           <p className="card-text">
-            Total Amount: <strong>{amount / 100} {currency}</strong>
+            Total Amount: <strong>{amount} {currency}</strong>
           </p>
-          <button className="btn btn-success w-100" onClick={handlePayment}>
-            Pay Now
-          </button>
+
+          {/* Show Pay Now button only if the orderId is available */}
+          {orderId && (
+            <button className="btn btn-success w-100" onClick={doPayment}>
+              Pay Now
+            </button>
+          )}
         </div>
       </div>
 
       <div className="text-center mt-4">
-        <p className="text-muted">Your payment is securely processed through Razorpay.</p>
+        <p className="text-muted">Your payment is securely processed through Cashfree.</p>
       </div>
     </div>
   );

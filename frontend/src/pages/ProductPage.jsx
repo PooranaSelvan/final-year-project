@@ -31,7 +31,7 @@ const ProductPage = () => {
     e.preventDefault();
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const userID = userInfo._id;
-    console.log(qty);
+    // console.log(qty);
 
     try {
       const { data } = await axiosInstance.post("/cart/", { productId: id, userId: userID, qty }, { withCredentials: true });

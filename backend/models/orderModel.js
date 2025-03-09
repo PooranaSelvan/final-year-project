@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
-    status: { type: String, default: 'pending' },
+    status: { type: String, default: 'successful' },
     products: [
       {
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },

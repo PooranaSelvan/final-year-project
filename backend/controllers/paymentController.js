@@ -1,114 +1,114 @@
-import Razorpay from 'razorpay';
-import crypto from 'crypto';
 import Order from '../models/orderModel.js';  // Assuming you have an Order model to save data
-import cron from 'node-cron';
-import { razorpay } from '../server.js';
+import { Cashfree } from "cashfree-pg"; 
+import { load } from '@cashfreepayments/cashfree-js';
+import axios from 'axios';
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const app_id = process.env.CASHFREE_APP_ID;
+const secrect_key = process.env.CASHFREE_API_KEY;
+Cashfree.XEnvironment = process.env.NODE_ENV;
+
+let cashfree;
+var initializeSDK = async function () {          
+    cashfree = await load({
+        mode: process.env.NODE_ENV
+    });
+};
+initializeSDK();
+
 
 // Controller to create an order
-export const createOrder = async (req, res) => {
-  console.log(req.body);
-  const { currency, total, userId, products } = req.body;  // Including products in the request body
-  // console.log(products);
+export const createCashfreeOrder = async (req, res) => {
+  const { userId, orderAmount, customerDetails } = req.body;
 
-  const options = {
-    amount: total * 100, // Amount in paise
-    currency,
-    receipt: 'receipt#1', // Optional
-    payment_capture: 1, // 1 for auto-capture, 0 for manual
-  };
+  function generateOrderId() {
+    const randomId = Math.floor(Math.random() * 100000000); // Generates a random number
+    return `shoploot2k25_${randomId}`;
+  }
 
   try {
-    // Create order with Razorpay API
-    const response = await razorpay.orders.create(options);
-
-    // Save the order to your database
-    const order = new Order({
-      orderId: response.id,
-      amount: total,
-      currency,
-      user: userId,
-      products: products.map(product => ({
-        productId: product.productId,
-        quantity: product.quantity,
-        price: parseFloat(product.price) * 100,  // Convert price to paise if it's a string or invalid number
-        name: product.name
-      }))
-    });
-
-    await order.save();
-
-    res.json({
-      orderId: response.id,
-      currency: response.currency,
-      amount: response.amount,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Webhook to verify payment success
-export const handleWebhook = async (req, res) => {
-  const signature = req.headers['x-razorpay-signature'];
-  const webhookSecret = '123456';
-
-  const reqBodyString = JSON.stringify(req.body);
-
-  const expectedSignature = crypto
-    .createHmac('sha256', webhookSecret)
-    .update(reqBodyString)
-    .digest('hex');
-
-  if (signature === expectedSignature) {
-    const event = req.body;
-
-    if (event.event === 'payment.captured') {
-      const paymentId = event.payload.payment.entity.id;
-      const orderId = event.payload.payment.entity.order_id;
-
-      try {
-        // Find the order with the orderId and include the products
-        const order = await Order.findOne({ orderId }).populate('products.productId');
-
-        if (order) {
-          order.status = 'successful';
-          await order.save();
-
-          console.log(`Order ${orderId} status updated to successful.`);
-
-          // You can now access the product details as part of the order
-          console.log('Order products:', order.products);
-
-          res.status(200).send('OK');
-        } else {
-          res.status(404).send('Order not found');
+    const options = {
+        method: 'POST',
+        url: 'https://sandbox.cashfree.com/pg/orders',
+        headers: {
+            accept: 'application/json',
+            'x-api-version': '2022-09-01',
+            'content-type': 'application/json',
+            'x-client-id': app_id,
+            'x-client-secret': secrect_key
+        },
+        data: {
+            customer_details: {
+                customer_id: userId,
+                customer_email: customerDetails.email,
+                customer_phone: String(customerDetails.mobile),
+                customer_name: customerDetails.name
+            },
+            order_meta: {
+                notify_url: "https://webhook.site/d057a7d4-c09a-405c-b44b-3067a1559a07",
+                payment_methods: 'cc,dc,upi'
+            },
+            order_amount: orderAmount,
+            order_id: generateOrderId(),
+            order_currency: 'INR',
+            order_note: 'This is my first Order',
         }
-      } catch (error) {
-        console.error('Error updating order status:', error);
-        res.status(500).send('Error processing payment');
-      }
-    } else {
-      res.status(200).send('Payment not captured');
-    }
-  } else {
-    res.status(400).send('Invalid signature');
+    };
+
+    axios
+    .request(options)
+    .then(function (response) {
+      return res.status(200).send({
+        paymentSessionId: response.data.payment_session_id,
+        paymentLink: response.data.payments.url,
+        orderId: response.data.order_id,
+        amount:response.data.order_amount,
+        currency:response.data.order_currency,
+      });
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+
+  } catch (error) {
+    res.status(500).send({
+        message: error.message,
+        success: false
+    })
   }
 };
 
 
+export const checkStatus = async (req, res) => {
+  const { orderId } = req.body; // Destructure orderId from the request body
+  // console.log(orderId);
 
-// Set up cron job to run every day at midnight
-cron.schedule('0 0 * * *', async () => {
   try {
-    // Delete orders that are pending for more than 24 hours
-    const result = await Order.deleteMany({
-      status: 'pending',
-      createdAt: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Orders older than 24 hours
-    });
+    const options = {
+      method: 'GET',
+      url: `https://sandbox.cashfree.com/pg/orders/${orderId}`,
+      headers: {
+        accept: 'application/json',
+        'x-api-version': '2022-09-01',
+        'x-client-id': app_id,
+        'x-client-secret': secrect_key,
+      },
+    };
 
-    console.log(`${result.deletedCount} pending orders deleted.`);
+    const response = await axios.request(options); // Use async/await instead of .then()
+    // console.log(response.data);
+
+    if (response.data.order_status === 'PAID') {
+      return res.json({ status: 'success' });
+    } else if (response.data.order_status === 'ACTIVE') {
+      return res.json({ status: 'active', sessionId: response.data.payment_session_id });
+    } else {
+      return res.json({ status: 'failure' }); // Send failure status
+    }
   } catch (error) {
-    console.error("Error during pending order cleanup:", error);
+    console.error(error);
+    return res.json({ status: 'error', message: error.message });
   }
-});
+};

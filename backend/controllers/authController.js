@@ -21,6 +21,7 @@ const authUser = asyncHandler(async (req, res) => {
         _id:user._id,
         name:user.name,
         email:user.email,
+        mobile:user.mobile,
         isAdmin:user.isAdmin,
         isSeller:user.isSeller
         });
@@ -33,7 +34,7 @@ const authUser = asyncHandler(async (req, res) => {
 
 // @Access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const {name, email, password} = req.body;
+    const {name, email, password, mobile} = req.body;
     // console.log(name,email,password)
 
     const userExists = await User.findOne({email});
@@ -46,7 +47,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name,
         email,
-        password
+        password,
+        mobile
     });
     
     if(user){
@@ -55,6 +57,7 @@ const registerUser = asyncHandler(async (req, res) => {
             _id:user._id,
             name:user.name,
             email:user.email,
+            mobile:user.mobile,
             isAdmin:user.isAdmin,
             isSeller:user.isSeller
         });
@@ -87,6 +90,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
             _id:user._id,
             name:user.name,
             email:user.email,
+            mobile:user.mobile,
             // password:user.password,
             isAdmin:user.isAdmin,
             isSeller:user.isSeller

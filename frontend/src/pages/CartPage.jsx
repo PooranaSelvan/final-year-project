@@ -196,7 +196,7 @@ const CartPage = () => {
               <p>
                 Total Price:{" "}
                 <strong>
-                  $
+                  ₹
                   {cartItems
                     .reduce(
                       (acc, item) =>
