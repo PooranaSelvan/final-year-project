@@ -1,4 +1,4 @@
-import Order from '../models/orderModel.js';  // Your Order model
+import Order from '../models/orderModel.js';
 
 export const getUserOrders = async (req, res) => {
   const { userId } = req.query;
@@ -7,7 +7,7 @@ export const getUserOrders = async (req, res) => {
     const orders = await Order.find({ user: userId })
       .populate({
         path: 'products.productId',
-        select: 'name price', // Selects only required fields
+        select: 'name price',
       });
 
     res.json(orders);
@@ -19,7 +19,7 @@ export const getUserOrders = async (req, res) => {
 
 
 export const createOrderHistory = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   const { orderId, amount, currency, userId, products } = req.body;
 
