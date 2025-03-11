@@ -29,7 +29,6 @@ const ShippingPage = () => {
       try {
         setLoading(true);
         const { data } = await axiosInstance.get('/shipping', { withCredentials: true });
-        // console.log('Fetched addresses:', data);
 
         if (Array.isArray(data)) {
           setAddresses(data);
@@ -86,6 +85,8 @@ const ShippingPage = () => {
   // Postal code validation to autofill city, state, country
   const handlePostalCodeChange = async (e) => {
     const postalCode = e.target.value;
+
+    // Update the state with the new postal code
     setNewAddress((prev) => ({
       ...prev,
       postalCode,
@@ -98,12 +99,12 @@ const ShippingPage = () => {
         const response = await axios.get(`https://api.postalpincode.in/pincode/${postalCode}`);
         if (response.data[0].Status === 'Success') {
           const { District, State } = response.data[0].PostOffice[0];
-          setNewAddress({
-            ...newAddress,
+          setNewAddress((prev) => ({
+            ...prev,
             city: District,
             state: State,
             country: 'India', // Set country to India
-          });
+          }));
         } else {
           toast.error('Invalid postal code');
         }
@@ -123,7 +124,6 @@ const ShippingPage = () => {
       toast.error("Failed to select address.");
     }
   };
-  
 
   return (
     <div className="container mt-5">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ const Navbar = () => {
   const [isSeller, setIsSeller] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null); // Reference for the dropdown menu
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,22 @@ const Navbar = () => {
 
     toast.success("Logged Out Successfully!");
   };
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Clean up the event listener
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
@@ -80,23 +97,23 @@ const Navbar = () => {
                 </li>
 
                 {/* User Dropdown */}
-                <li className="nav-item dropdown">
+                <li className="nav-item dropdown" ref={dropdownRef}>
                   <button className="btn btn-outline-secondary dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     Menu
                   </button>
                   <ul className={`dropdown-menu ${dropdownOpen ? "show" : ""}`}>
                     <li>
-                      <Link className="dropdown-item" to="/about">
+                      <Link className="dropdown-item" to="/about" onClick={() => setDropdownOpen(false)}>
                         About
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="/order-history">
+                      <Link className="dropdown-item" to="/order-history" onClick={() => setDropdownOpen(false)}>
                         Orders
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="/settings">
+                      <Link className="dropdown-item" to="/settings" onClick={() => setDropdownOpen(false)}>
                         Settings
                       </Link>
                     </li>

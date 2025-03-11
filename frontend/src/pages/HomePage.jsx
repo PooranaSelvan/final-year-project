@@ -5,11 +5,12 @@ import Loader from "../components/Loader.jsx";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); // Ensure loading is initially true
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
         const { data } = await axiosInstance.get('/products/');
 
@@ -23,13 +24,17 @@ const HomePage = () => {
         }
       } catch (error) {
         console.error('Error fetching products:', error);
-        setProducts([]); // Ensure no crash
+        setProducts([]);
       }
-      setLoading(false); // Stop loading only after fetch completes
+      setLoading(false);
     };
 
     fetchProducts();
   }, []);
+
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -45,11 +50,18 @@ const HomePage = () => {
         <div className="row mb-4 align-items-center">
           <div className="col">
             <h2 className="display-4 fw-bold">All Products</h2>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {products.length > 0 ? (
-            products.map((product) => (
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
               <div className="col" key={product._id}>
                 <Product products={product} />
               </div>

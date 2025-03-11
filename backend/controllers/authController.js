@@ -108,8 +108,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (!user) {
-        res.status(404);
-        throw new Error('User not found');
+        return res.status(404).json({ message: 'User not found' });
     }
 
     const { name, email, password } = req.body;
@@ -118,23 +117,21 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     
     if (email) {
         if (!validateEmail(email)) {
-            res.status(400).json({ message: 'Invalid email format' });
-            return;
+            return res.status(400).json({ message: 'Invalid email format' });
         }
         user.email = email;
     }
 
     if (password) {
         if (password.length < 6) {
-            res.status(400).json({ message: 'Password must be at least 6 characters' });
-            return;
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
         }
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        
+        // Don't manually hash it, let the pre-save middleware handle it
+        user.password = password;
     }
 
     await user.save();
-    console.log(user);
 
     res.json({
         _id: user._id,
@@ -143,6 +140,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         message: "Profile updated successfully",
     });
 });
+
+
 
 export const validateEmail = (email) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
