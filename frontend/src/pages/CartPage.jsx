@@ -103,7 +103,7 @@ const CartPage = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="alert alert-warning text-center">
+      <div className="alert alert-warning text-center mt-5 pt-5">
         <p>Your cart is empty. Start adding items!</p>
         <Link to="/" className="btn btn-primary">
           Shop Now
@@ -113,7 +113,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="container my-5">
+    <div className="container my-5 mt-5">
       <div className="d-flex flex-wrap justify-content-between">
       <h1 className="text-center text-primary mb-4">Your Cart</h1>
       <Link to="/" className="btn btn-link text-decoration-none mb-4">
