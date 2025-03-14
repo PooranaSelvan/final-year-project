@@ -37,7 +37,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100" style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)" }}>
+    <div className="d-flex align-items-center justify-content-center vh-100 mt-5" style={{ background: "linear-gradient(135deg, #6a11cb, #2575fc)" }}>
       <div className="bg-white p-5 rounded-4 shadow-lg" style={{ width: "100%", maxWidth: "400px" }}>
         <h2 className="fw-bold text-center text-primary mb-4">Register</h2>
         {error && <div className="alert alert-danger text-center">{error}</div>}

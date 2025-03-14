@@ -126,7 +126,7 @@ const ShippingPage = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 pt-5">
       <div className="d-flex flex-wrap justify-content-between">
         <h1 className="text-center text-primary mb-4">Shipping Page</h1>
         <Link to="/cart" className="btn btn-link text-decoration-none mb-4">
