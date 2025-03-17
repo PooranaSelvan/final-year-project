@@ -76,13 +76,7 @@ const HomePage = () => {
               <h1 className="display-4 fw-bold">Discover Amazing Products</h1>
               <p className="lead">Find the perfect items for your needs with our extensive collection.</p>
               <div className="input-group mt-4">
-                <input
-                  type="text"
-                  className="form-control form-control-lg border-0"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                <input type="text" className="form-control form-control-lg border-0" placeholder="Search products..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                 <button className="btn btn-dark" type="button">
                   <i className="bi bi-search"></i> Search
                 </button>
