@@ -8,7 +8,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import App from './App.jsx';
 
 
-// Lazy load the pages to optimize performance
 const HomePage = lazy(() => import('./pages/HomePage.jsx'));
 const ProductPage = lazy(() => import('./pages/ProductPage.jsx'));
 const CartPage = lazy(() => import('./pages/CartPage.jsx'));
@@ -24,9 +23,6 @@ const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
 const Success = lazy(() => import('./components/Success.jsx'));
 const Failure = lazy(() => import('./components/Failure.jsx'));
 
-
-
-// Define routes with lazy loading
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>

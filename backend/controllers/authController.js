@@ -5,8 +5,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
-// authUser
-// /api/users/login
 const authUser = asyncHandler(async (req, res) => {
     // console.log(req.body)
     const {email, password} = req.body; 
@@ -32,7 +30,6 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 
-// @Access Public
 const registerUser = asyncHandler(async (req, res) => {
     const {name, email, password, mobile} = req.body;
     // console.log(name,email,password)
@@ -68,8 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 });
 
-// @Access Private
-// /api/users/logout
+
 const logoutUser = asyncHandler(async (req, res) => {
     res.cookie("jwt", "", {
         httpOnly: true,
@@ -80,8 +76,6 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 
-// @Access Public
-// /api/users/profile
 const getUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
@@ -102,8 +96,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 
-/// @Access Private
-// /api/users/profile
 const updateUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
@@ -127,7 +119,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
             return res.status(400).json({ message: 'Password must be at least 6 characters' });
         }
         
-        // Don't manually hash it, let the pre-save middleware handle it
+        // Don't manually hash it, let the pre-save middleware handle it.
         user.password = password;
     }
 

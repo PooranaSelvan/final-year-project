@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from 'lucide-react';
 import axiosInstance from "../axiosInstance.js";
-import '../SettingsPage.css'; // Import custom CSS for additional styling
+import '../SettingsPage.css';
 
 const SettingsPage = () => {
   const [user, setUser ] = useState({ name: "", email: "" });
@@ -16,9 +16,7 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const { data } = await axiosInstance.get("/users/profile", {
-          withCredentials: true,
-        });
+        const { data } = await axiosInstance.get("/users/profile", { withCredentials: true,});
         setUser ({ name: data.name, email: data.email });
         setUpdatedUser ({ name: data.name, email: data.email, password: "" });
       } catch (error) {
@@ -51,7 +49,7 @@ const SettingsPage = () => {
     }
 
     setLoading(false);
-    document.getElementById("closeModal").click(); // Close modal after updating
+    document.getElementById("closeModal").click();
   };
 
   return (
@@ -75,7 +73,6 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Update Profile Modal */}
       <div className="modal fade" id="editProfileModal" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">

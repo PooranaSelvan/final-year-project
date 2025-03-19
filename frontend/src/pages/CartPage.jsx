@@ -26,13 +26,7 @@ const CartPage = () => {
       }
 
       try {
-        const { data } = await axiosInstance.get(
-          `/cart?userId=${userID}`,
-          {
-            withCredentials: true,
-          }
-        );
-
+        const { data } = await axiosInstance.get(`/cart?userId=${userID}`,{ withCredentials: true });
         setCartItems(data.cartItems);
         setLoading(false);
       } catch (error) {
@@ -55,9 +49,7 @@ const CartPage = () => {
         [id]: value,
       }));
 
-      await axiosInstance.put(
-        `/cart?userId=${userInfo._id}`,
-        { productId: id, qty: value },
+      await axiosInstance.put(`/cart?userId=${userInfo._id}`, { productId: id, qty: value },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,10 +67,7 @@ const CartPage = () => {
 
   const removeFromCartHandler = async (productId) => {
     try {
-      await axiosInstance.delete(`/cart/`, {
-        data: { productId, userId: userID },
-        withCredentials: true,
-      });
+      await axiosInstance.delete(`/cart/`, { data: { productId, userId: userID }, withCredentials: true});
       setCartItems(cartItems.filter((item) => item._id !== productId)); 
       toast.success("Product removed from cart");
     } catch (error) {
@@ -123,21 +112,13 @@ const CartPage = () => {
       </div>
 
       <div className="row">
-        {/* Cart Items */}
         <div className="col-md-8">
           {cartItems.map((item) => (
             <div className="card mb-3" key={item._id}>
               <div className="row g-0">
-                {/* Product Image */}
                 <div className="col-md-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="img-fluid rounded-start"
-                    loading="lazy"
-                  />
+                  <img src={item.image} alt={item.name} className="img-fluid rounded-start" loading="lazy"/>
                 </div>
-                {/* Product Details */}
                 <div className="col-md-8">
                   <div className="card-body">
                     <h5 className="card-title">{item.name}</h5>
@@ -148,13 +129,7 @@ const CartPage = () => {
                       {item.countInStock > 0 && (
                         <div>
                           <label className="form-label">Quantity:</label>
-                          <select
-                            className="form-select"
-                            value={quantities[item._id] || item.qty}
-                            onChange={(e) =>
-                              handleQtyChange(item._id, Number(e.target.value))
-                            }
-                          >
+                          <select className="form-select" value={quantities[item._id] || item.qty} onChange={(e) => handleQtyChange(item._id, Number(e.target.value))}>
                             {[...Array(item.countInStock).keys()].map((x) => (
                               <option key={x + 1} value={x + 1}>
                                 {x + 1}
@@ -164,10 +139,7 @@ const CartPage = () => {
                         </div>
                       )}
                     </div>
-                    <button
-                      onClick={() => removeFromCartHandler(item._id)}
-                      className="btn btn-danger"
-                    >
+                    <button onClick={() => removeFromCartHandler(item._id)} className="btn btn-danger">
                       <Trash2 size={16} className="me-2" />
                       Remove
                     </button>
@@ -196,20 +168,10 @@ const CartPage = () => {
               <p>
                 Total Price:{" "}
                 <strong>
-                  ₹
-                  {cartItems
-                    .reduce(
-                      (acc, item) =>
-                        acc + (quantities[item._id] || item.qty) * item.price,
-                      0
-                    )
-                    .toFixed(2)}
+                  ₹{cartItems.reduce((acc, item) => acc + (quantities[item._id] || item.qty) * item.price,0).toFixed(2)}
                 </strong>
               </p>
-              <button
-                className="btn btn-success w-100"
-                onClick={checkOutHandler}
-              >
+              <button className="btn btn-success w-100" onClick={checkOutHandler}>
                 Proceed to Checkout
               </button>
             </div>

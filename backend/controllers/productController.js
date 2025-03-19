@@ -12,6 +12,7 @@ export const getProducts  = async(req, res) => {
     }
 }
 
+
 export const getProductById  = async(req, res) => {
 
     try{
@@ -23,32 +24,30 @@ export const getProductById  = async(req, res) => {
     }
 }
 
+
 export const createProduct = async (req, res) => {
     try {
         const { name, description, brand, category, price, countInStock, numReviews, isSeller, userId, image } = req.body;
         
-        // Check if user is a seller
         if (!isSeller) {
             return res.status(403).json({ message: "Only sellers can create products." });
         }
 
-        // Ensure image URL is provided
         if (!image) {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        // Create new product
         const product = new Product({
             name,
             description,
-            image,  // Save image URL from frontend
+            image,
             brand,
             category,
             price,
             countInStock,
             rating: 0,
             numReviews,
-            user: userId, // Associate with seller
+            user: userId,
         });
 
         const createdProduct = await product.save();
@@ -94,15 +93,12 @@ export const deleteProduct = async (req, res) => {
         return res.status(404).json({ message: "Product not found" });
       }
   
-      // Extract the Cloudinary public ID from the image URL
       if (product.image && product.image.includes("cloudinary.com")) {
         const publicId = product.image.split("/").pop().split(".")[0]; // Extract ID from URL
   
-        // Delete image from Cloudinary
         await cloudinary.uploader.destroy(publicId);
       }
   
-      // Delete the product from the database
       await Product.findByIdAndDelete(req.params.id);
   
       res.status(200).json({ message: "Product deleted successfully" });

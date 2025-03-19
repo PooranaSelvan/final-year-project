@@ -20,17 +20,17 @@ const PaymentPage = () => {
   const navigate = useNavigate();
 
 
-  // Initialize Cashfree SDK
+  // Cashfree SDK
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
-  const [cashfree, setCashfree] = useState(null); // Track Cashfree SDK state
+  const [cashfree, setCashfree] = useState(null); // Tracking Cashfree SDK state
 
   const initializeSDK = async () => {
     try {
       // console.log(import.meta.env.VITE_NODE_ENV);
       const cashfreeSdk = await load({ mode: import.meta.env.VITE_NODE_ENV === "production" ? "production" :"sandbox" });
       // console.log("Cashfree SDK loaded:", cashfreeSdk);
-      setCashfree(cashfreeSdk); // Set the loaded SDK in state
-      setIsSdkLoaded(true); // Mark SDK as loaded
+      setCashfree(cashfreeSdk);
+      setIsSdkLoaded(true);
     } catch (error) {
       console.error("Error loading Cashfree SDK:", error);
     }
@@ -41,7 +41,6 @@ const PaymentPage = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch cart items and then create order after cartItems are loaded
     const fetchCartItems = async () => {
       if (!userInfo._id) {
         toast.error("User not logged in");
@@ -109,8 +108,8 @@ const PaymentPage = () => {
         );
   
         // console.log(data);
-        setOrderId(data.orderId); // Make sure orderId is set
-        setAmount(data.amount);   // Make sure amount is set
+        setOrderId(data.orderId);
+        setAmount(data.amount);
         setCurrency(data.currency);
         setSessionId(data.paymentSessionId);
   
@@ -157,7 +156,6 @@ const PaymentPage = () => {
         console.log("Payment has been completed, Check for Payment Status");
         console.log(result.paymentDetails);
   
-        // Send payment details (orderId or paymentDetails) to your backend to check payment status
         const paymentResponse = await axiosInstance.post('/payment/check-status', {
           orderId: orderId,
           // amount: amount,
@@ -184,7 +182,6 @@ const PaymentPage = () => {
             }
             navigate('/success');
           } else {
-            // Handle failure or active payment status
             navigate(`/failure`);
           }
         } else {
@@ -215,7 +212,6 @@ const PaymentPage = () => {
             Total Amount: <strong>{amount} {currency}</strong>
           </p>
 
-          {/* Show Pay Now button only if the orderId is available */}
           {orderId && (
             <button className="btn btn-success w-100" onClick={doPayment}>
               Pay Now

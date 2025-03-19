@@ -17,8 +17,8 @@ const userSchema = mongoose.Schema(
 
 
 
-// Match password method for comparing entered password with the hashed password
-// this func can be called in anywhere
+// Match password method for comparing entered password with the hashed password.
+// this func can be called in anywhere.
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

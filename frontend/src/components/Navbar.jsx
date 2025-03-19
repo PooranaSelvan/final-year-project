@@ -11,12 +11,11 @@ const Navbar = () => {
   const [isSeller, setIsSeller] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null); // Reference for the dropdown menu
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosInstance
-      .get("/users/auth", { withCredentials: true })
+    axiosInstance.get("/users/auth", { withCredentials: true })
       .then((response) => {
         setIsLoggedIn(response.data.isLoggedIn);
         setIsSeller(response.data.user?.isSeller || false);
@@ -26,8 +25,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    axiosInstance
-      .post("/users/logout", {}, { withCredentials: true })
+    axiosInstance.post("/users/logout", {}, { withCredentials: true })
       .then(() => {
         setIsLoggedIn(false);
         setIsAdmin(false);
@@ -39,7 +37,6 @@ const Navbar = () => {
     toast.success("Logged Out Successfully!");
   };
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -47,10 +44,8 @@ const Navbar = () => {
       }
     };
 
-    // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Clean up the event listener
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
@@ -73,6 +68,7 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto d-flex align-items-center gap-3">
             {isLoggedIn ? (
               <>
+              
                 {isSeller && (
                   <li className="nav-item">
                     <Link to="/sell" className="btn btn-outline-primary rounded-pill px-3 py-1">

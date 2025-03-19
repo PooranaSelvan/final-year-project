@@ -1,41 +1,39 @@
-/* SettingsPage.css */
-
 body {
-     background-color: #f8f9fa; /* Light background for the page */
+     background-color: #f8f9fa;
    }
    
    .card {
-     border-radius: 15px; /* Rounded corners for the card */
+     border-radius: 15px;
    }
    
    .card-title {
      font-weight: bold;
-     color: #007bff; /* Bootstrap primary color */
+     color: #007bff;
    }
    
    .modal-content {
-     border-radius: 15px; /* Rounded corners for the modal */
+     border-radius: 15px;
    }
    
    .btn-primary {
-     background-color: #007bff; /* Bootstrap primary color */
+     background-color: #007bff;
      border: none;
    }
    
    .btn-primary:hover {
-     background-color: #0056b3; /* Darker shade on hover */
+     background-color: #0056b3;
    }
    
    .btn-success {
-     background-color: #28a745; /* Bootstrap success color */
+     background-color: #28a745;
      border: none;
    }
    
    .btn-success:hover {
-     background-color: #218838; /* Darker shade on hover */
+     background-color: #218838;
    }
    
    .form-control {
-     border-radius: 10px; /* Rounded corners for input fields */
-     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for input fields */
+     border-radius: 10px;
+     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
    }

@@ -3,7 +3,6 @@ import Cart from "../models/cartModel.js";
 import Product from "../models/productModel.js"; 
 
 
-// Controller to add a product to the cart
 const addToCart = asyncHandler(async (req, res) => {
 
   const { productId, qty } = req.body; 
@@ -76,6 +75,7 @@ const addToCart = asyncHandler(async (req, res) => {
 });
 
 
+
 const updateCart = asyncHandler(async (req, res) => {
 
   const { productId, qty } = req.body;
@@ -123,6 +123,7 @@ const getCart = asyncHandler(async (req, res) => {
 
   res.status(200).json(cart);
 });
+
 
 
 const removeFromCart = asyncHandler(async (req, res) => {

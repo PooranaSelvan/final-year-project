@@ -18,12 +18,11 @@ const ShippingPage = () => {
     country: '',
     phone: '',
   });
-  const [loading, setLoading] = useState(true); // Loading state for fetching addresses
-  const [error, setError] = useState(null); // Error state for handling fetch failures
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  // Fetch the addresses from the backend
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
@@ -46,7 +45,7 @@ const ShippingPage = () => {
     fetchAddresses();
   }, []);
 
-  // Handle adding new address
+
   const handleAddAddress = async () => {
     try {
       const { data } = await axiosInstance.post('/shipping', newAddress, {
@@ -64,7 +63,7 @@ const ShippingPage = () => {
     }
   };
 
-  // Handle deleting an address
+
   const handleDeleteAddress = async (addressId) => {
     try {
       const { data } = await axiosInstance.delete(`/shipping/${addressId}`, {
@@ -86,16 +85,13 @@ const ShippingPage = () => {
   const handlePostalCodeChange = async (e) => {
     const postalCode = e.target.value;
 
-    // Update the state with the new postal code
     setNewAddress((prev) => ({
       ...prev,
       postalCode,
     }));
 
-    // Check if postal code length is 6 and then auto-fill city, state, country
     if (postalCode.length === 6) {
       try {
-        // Call Pincode API to get address info based on the postal code
         const response = await axios.get(`https://api.postalpincode.in/pincode/${postalCode}`);
         if (response.data[0].Status === 'Success') {
           const { District, State } = response.data[0].PostOffice[0];
@@ -103,7 +99,7 @@ const ShippingPage = () => {
             ...prev,
             city: District,
             state: State,
-            country: 'India', // Set country to India
+            country: 'India',
           }));
         } else {
           toast.error('Invalid postal code');
@@ -161,10 +157,7 @@ const ShippingPage = () => {
                 <p>Phone: {addr.phone}</p>
               </div>
               <button className='btn btn-success' onClick={() => handleBuyWithAddress(addr._id)}>Buy With This Address</button>
-              <button
-                className="btn btn-danger"
-                onClick={() => handleDeleteAddress(addr._id)}
-              >
+              <button className="btn btn-danger" onClick={() => handleDeleteAddress(addr._id)}>
                 Delete
               </button>
             </div>
@@ -174,76 +167,30 @@ const ShippingPage = () => {
         !loading && !error && <p>No shipping addresses found.</p>
       )}
 
-      {/* Form to add a new address */}
       <h3 className="mt-5">Add New Address</h3>
       <div className="card p-4">
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Full Name"
-            value={newAddress.fullName}
-            onChange={(e) => setNewAddress({ ...newAddress, fullName: e.target.value })}
-          />
+          <input type="text" className="form-control" placeholder="Full Name" value={newAddress.fullName} onChange={(e) => setNewAddress({ ...newAddress, fullName: e.target.value })}/>
         </div>
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Address"
-            value={newAddress.address}
-            onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
-          />
+          <input type="text" className="form-control" placeholder="Address" value={newAddress.address} onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}/>
         </div>
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Postal Code"
-            value={newAddress.postalCode}
-            onChange={handlePostalCodeChange}
-          />
+          <input type="text" className="form-control" placeholder="Postal Code" value={newAddress.postalCode} onChange={handlePostalCodeChange}/>
         </div>
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="City"
-            disabled
-            value={newAddress.city}
-          />
+          <input type="text" className="form-control" placeholder="City" disabled value={newAddress.city}/>
+        </div>
+        <div className="mb-3">    
+          <input type="text" className="form-control" placeholder="State" disabled value={newAddress.state}/>
         </div>
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="State"
-            disabled
-            value={newAddress.state}
-          />
+          <input type="text" className="form-control" placeholder="Country" disabled value={newAddress.country}/>
         </div>
         <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Country"
-            disabled
-            value={newAddress.country}
-          />
+          <input type="text" className="form-control" placeholder="Phone" value={newAddress.phone} onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}/>
         </div>
-        <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Phone"
-            value={newAddress.phone}
-            onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-          />
-        </div>
-        <button
-          className="btn btn-primary"
-          onClick={handleAddAddress}
-        >
+        <button className="btn btn-primary" onClick={handleAddAddress}>
           Add Address
         </button>
       </div>

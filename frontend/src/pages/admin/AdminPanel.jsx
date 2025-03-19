@@ -116,17 +116,18 @@ const AdminPanel = () => {
       </div>
       <h2 className="text-center">Admin Panel</h2>
 
-      {/* Toggle Buttons */}
+  
       <div className="d-flex justify-content-center gap-3 mt-3">
         <button className={`btn ${activeTab === "users" ? "btn-primary" : "btn-secondary"}`} onClick={() => setActiveTab("users")}>
           <Users size={18} /> Manage Users
         </button>
+
         <button className={`btn ${activeTab === "products" ? "btn-primary" : "btn-secondary"}`} onClick={() => setActiveTab("products")}>
           <Box size={18} /> Manage Products
         </button>
       </div>
 
-      {/* USERS SECTION */}
+      {/* USERS */}
       {activeTab === "users" && (
         <div className="mt-4">
           <h4 className="text-center mb-3">Users List</h4>
@@ -159,7 +160,7 @@ const AdminPanel = () => {
       )}
       
 
-      {/* PRODUCTS SECTION */}
+      {/* PRODUCTS */}
       {activeTab === "products" && (
         <div className="mt-4">
           <h4 className="text-center mb-3">Products List</h4>
@@ -188,7 +189,7 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* USER UPDATE MODAL */}
+      {/* USER UPDATE */}
       {selectedUser && (
         <div className="modal show d-block bg-dark bg-opacity-50">
           <div className="modal-dialog">
@@ -212,7 +213,7 @@ const AdminPanel = () => {
       )}
 
 
-      {/* PRODUCT UPDATE MODAL */}
+      {/* PRODUCT UPDATE */}
       {selectedProduct && (
         <div className="modal show d-block bg-dark bg-opacity-50">
           <div className="modal-dialog">

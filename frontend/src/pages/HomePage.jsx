@@ -49,7 +49,7 @@ const HomePage = () => {
     fetchProducts();
   }, [])
 
-  // Extract unique categories from products
+
   const categories = ["All", ...new Set(products.map((product) => product.category || "Uncategorized"))]
 
   const filteredProducts = products.filter((product) => {
@@ -68,7 +68,6 @@ const HomePage = () => {
 
   return (
     <div className="bg-light mt-5 pt-4">
-      {/* Hero Section with Gradient Background */}
       <div className="hero-gradient text-white py-5 mb-4">
         <div className="container">
           <div className="row align-items-center">
@@ -84,11 +83,7 @@ const HomePage = () => {
             </div>
             <div className="col-md-5 d-none d-md-flex justify-content-center">
               <div className="banner-image-container">
-                <img
-                  src="/images/shoploot.png"
-                  alt="Shop Banner"
-                  className="img-fluid rounded shadow hover-scale banner-image"
-                />
+                <img src="/images/shoploot.png" alt="Shop Banner" className="img-fluid rounded shadow hover-scale banner-image"/>
               </div>
             </div>
           </div>
@@ -96,22 +91,16 @@ const HomePage = () => {
       </div>
 
       <div className="container py-4">
-        {/* Categories */}
         <div className="mb-4 category-tabs">
           <div className="d-flex flex-wrap gap-2">
             {categories.map((category) => (
-              <button
-                key={category}
-                className={`btn ${activeCategory === category ? "btn-primary" : "btn-outline-primary"}`}  // Primary color for active
-                onClick={() => setActiveCategory(category)}
-              >
+              <button key={category} className={`btn ${activeCategory === category ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setActiveCategory(category)}>
                 {category}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Featured Products Section (showing first 4 products) */}
         {filteredProducts.length > 0 && activeCategory === "All" && !searchTerm && (
           <div className="mb-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -132,19 +121,9 @@ const HomePage = () => {
           </div>
         )}
 
-        {/* All Products */}
         <div id="all-products">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <h2 className="fw-bold mb-0">{activeCategory === "All" ? "All Products" : activeCategory}</h2>
-            <div className="d-flex align-items-center">
-              <span className="me-2">Sort by:</span>
-              <select className="form-select form-select-sm" style={{ width: "150px" }}>
-                <option>Newest</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Popularity</option>
-              </select>
-            </div>
           </div>
 
           {filteredProducts.length > 0 ? (
@@ -167,15 +146,13 @@ const HomePage = () => {
                 onClick={() => {
                   setSearchTerm("")
                   setActiveCategory("All")
-                }}
-              >
+                }}>
                 Clear Filters
               </button>
             </div>
           )}
         </div>
 
-        {/* Newsletter Subscription with Gradient */}
         {!isLoggedIn && (
           <div className="row mt-5 pt-5 pb-4">
             <div className="col-md-8 mx-auto text-center">
@@ -187,6 +164,7 @@ const HomePage = () => {
                       Login
                     </button>
                   </Link>
+                  
                   <Link to='/register'>
                     <button className="btn btn-dark" type="button">
                       SignUp

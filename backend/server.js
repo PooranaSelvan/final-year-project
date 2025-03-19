@@ -10,16 +10,14 @@ import cors from "cors";
 import { v2 as cloudinary } from 'cloudinary';
 import shippingRoutes from "./routes/shippingRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-import { load } from '@cashfreepayments/cashfree-js';
-import { Cashfree } from "cashfree-pg";
+import orderRoutes from "./routes/orderRoutes.js"
 
 
 // express declaration
 const app = express();
 
 
-// env file configuration
+// env file
 dotenv.config();
 
 const allowedOrigins = [
@@ -31,19 +29,16 @@ const allowedOrigins = [
 
 const corsOptions = {
      origin: (origin, callback) => {
-       // Allow the request if the origin is in the allowedOrigins array
        if (allowedOrigins.includes(origin) || !origin) {
-         callback(null, true);  // Allow the origin
+         callback(null, true); 
        } else {
-         callback(new Error("Not allowed by CORS"));  // Reject the origin
+         callback(new Error("Not allowed by CORS")); 
        }
      },
-     credentials: true,  // Allow credentials (cookies, authorization headers, etc.)
+     credentials: true, // to allow COOKIES from the browser.
 };
 
 
-
-// url data encoded
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
@@ -56,7 +51,7 @@ export const config = {
      nodeEnv: process.env.NODE_ENV
 };
 
-// Configure Cloudinary
+
 cloudinary.config({ 
      cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
      api_key: process.env.CLOUDINARY_API_KEY, 
@@ -66,8 +61,7 @@ cloudinary.config({
 export default cloudinary;
 
 
-// PORT
-const PORT = process.env.PORT || 5000; // port to run a server.
+const PORT = process.env.PORT || 5000;
 
 
 
@@ -84,8 +78,6 @@ app.use('/api/payment', paymentRoutes);
 app.use("/api/orders", orderRoutes);
 
 
-
-// Error Handler
 app.use(notFound);
 app.use(errorHandler);
 

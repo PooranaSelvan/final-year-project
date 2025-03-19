@@ -23,7 +23,6 @@ const OrderHistoryPage = () => {
           { withCredentials: true }
         );
 
-        // Filter out successful orders only
         const successfulOrders = data.filter(order => order.status === 'successful');
         setOrders(successfulOrders);
         setLoading(false);

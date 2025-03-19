@@ -1,6 +1,6 @@
 import ShippingAddress from "../models/shippingAddress.js";
 
-// Get Shipping Addresses
+
 export const getShippingAddresses = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -14,7 +14,7 @@ export const getShippingAddresses = async (req, res) => {
   }
 };
 
-// Add Shipping Address
+
 export const addShippingAddress = async (req, res) => {
   try {
     const { fullName, address, city, state, postalCode, country, phone } = req.body;
@@ -35,7 +35,7 @@ export const addShippingAddress = async (req, res) => {
   }
 };
 
-// Delete Shipping Address
+
 export const deleteShippingAddress = async (req, res) => {
   try {
     const { addressId } = req.params;

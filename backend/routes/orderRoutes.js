@@ -3,7 +3,6 @@ import { getUserOrders, createOrderHistory } from '../controllers/orderControlle
 
 const router = express.Router();
 
-// Get user orders
 router.get('/', getUserOrders);
 router.post('/', createOrderHistory);
 
