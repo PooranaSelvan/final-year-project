@@ -112,7 +112,7 @@ const CartPage = () => {
       </div>
 
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-8" style={{ maxHeight: "400px", overflowY: "auto" }}>
           {cartItems.map((item) => (
             <div className="card mb-3" key={item._id}>
               <div className="row g-0">
