@@ -98,11 +98,11 @@ const Navbar = () => {
                     Menu
                   </button>
                   <ul className={`dropdown-menu ${dropdownOpen ? "show" : ""}`}>
-                    <li>
+                    {/* <li>
                       <Link className="dropdown-item" to="/about" onClick={() => setDropdownOpen(false)}>
                         About
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link className="dropdown-item" to="/order-history" onClick={() => setDropdownOpen(false)}>
                         Orders

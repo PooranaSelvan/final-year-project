@@ -7,10 +7,12 @@ const orderSchema = new mongoose.Schema(
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
     status: { type: String, default: 'successful' },
+    date : { type: String, required: true},
     products: [
       {
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         quantity: { type: Number, required: true },
+        productImage : { type: String, required: true},
       }
     ],
   },

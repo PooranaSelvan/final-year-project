@@ -23,10 +23,27 @@ export const createOrderHistory = async (req, res) => {
   // console.log(req.body);
 
   const { orderId, amount, currency, userId, products } = req.body;
+  // console.log(products);
+  // console.log("Producy Image" ,products.image);
 
   if (!req.body.orderId) {
     return res.status(400).json({ status: 'failure', message: 'orderId is required' });
   }
+
+
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const date = String(now.getDate()).padStart(2, '0');
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+  const formatted = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+  // console.log(formatted);
+
   
 
   const order = new Order({
@@ -34,11 +51,13 @@ export const createOrderHistory = async (req, res) => {
     orderId: orderId,
     currency: currency,
     user: userId,
+    date: formatted,
     products: products.map((product) => ({
       productId: product.product,
       quantity: product.qty,
       price: product.price,
-      name: product.name
+      name: product.name,
+      productImage: product.image
     }))
   });
 
